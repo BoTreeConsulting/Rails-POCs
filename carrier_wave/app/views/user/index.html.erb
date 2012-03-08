@@ -1,0 +1,21 @@
+<h2>Users list</h2>
+
+<table>
+		<tr>
+			<td>Name</td>
+			<td>Phone</td>
+			<td>Email</td>
+			<td></td>
+		</tr>	
+	<% @users.each do |user| %>
+		<tr>
+			<td><%= user.name %></td>
+			<td><%= user.phone %></td>
+			<td><%= user.email %></td>
+			<td><%= link_to "Download Resume", download_user_resume_path(user)  %></td>
+		</tr>	
+	<% end %>
+	
+</table>
+
+<%= link_to "Add New", new_user_path %>

@@ -1,0 +1,100 @@
+PARTH BAROT
+266/5, Parth App. Sector-29, 		        Contact no: (M) 09426420277
+Gandhinagar, Gujarat-382029                                 (H) 079-23237494
+India.		                            Email ID: parthbarot@yahoo.co.in
+	                                              parthbarot@gmail.com
+----------------------------------------------------------------------------
+Objective:
+	Seeking technical job to grow my career in the field of IT industry.
+
+Education:
+	Bachelor of Engineering (Computer Engineering)
+	Govt. Engineering College of Gandhinagar, Gujarat University,
+	India.
+	GPA: 64.56%			(June 2005)
+
+	Details:
+	Semester			Result (Percentage)
+	8th				73.85%
+	7th				62.75%
+	6th				59.2%
+	5th				58.5%
+	4th				64.8%
+	3rd				55.4%
+	1st				60.5%
+
+	12th Standard (Science Stream)
+	HSC, Gujarat Board
+	GPA: 80%			(March 2001)
+
+	10th Standard
+	SSC, Gujarat Board
+	GPA: 89.29%			(March 1999)
+
+Industrial Project:
+	
+	Duration:  		1 jan 2005 to 31 may 2005 
+	Undertaken At:   		Effective Teleservices, Infocity,                                                              Gandhinagar. 
+	Definition:  		To make a soft dialer for the call centre 					which can make inbound, outbound calls, 
+				monitor the agent’s activities regarding the 					calls (recording and playing of WAV file 
+				without MMC).
+	Main Work:  		IP Dialing in LAN, Voice Communication, 
+				Recording of Voice over IP call. Made for 
+				modem call also. Recording is done from 
+				scratch without any Activex control provided 
+				in .NET.
+	Project Type:  		Research & Development. 
+	Tools:   		Visual Studio .NET (C#), TB3 (TAPI 3.x 
+				Browser).	
+
+Relevant Courses:
+	
+	.NET Technology (C#, VB), VB, ASP, SQL
+	Advanced Java, C/CPP, JavaScript
+	
+	Software Engineering
+	Data Structure, Numerical Techniques, Compiler Construction
+	Theory of Computation
+	Data Communication & Networking (I & II)
+	Security & Encryption with eCommerce
+	Mobile computing, Parallel Computing, System Programming
+	Operating System, DBMS
+	Microprocessors(X85,X86,80286,80386)
+	OOP Concepts
+
+Projects:
+	Making a Discussion Forum in ASP.NET (C#.NET) with MS Access.
+
+	Getting started with Image to ASCII conversion which converts any
+	image to same text (made with characters only) image in C#.NET.
+
+	Learning PHP, JavaScript Injections & SQL Injections.
+
+	Whitepaper on Video Compression (7th Semester) which explains how 
+	Different frames in video content are organized & about different 
+	Compression Techniques, JPEG, MPEG formats.
+
+	Just Edit, which is project in VB (6th Semester). This small utility 
+	like WordPad but it Contains C/CPP highlighting, 
+	Encryption/Decryption,Dictionary, HEX open, MDI interface, Tree view 
+	support, Gujarati Keyboard, Word Counter.
+
+	Seminar on Embedded Systems & Windows CE (5th Semester) which 
+	explains about windows CE and how to develop Embedded tools with
+	Windows CE toolkit. Also explains about OLE.
+
+	Payroll System, Which is first project in VB with Microsoft Access.
+	This small project contains payment slips, reports, entry-exit 
+	timings and all details of employees.
+
+	Seminar on TCP/IP (4th Semester) which contains details of TCP/IP 
+	protocols and shows how it works.	
+
+	Seminar on Internet Workings (3rd Semester) which explains about
+	working of Internet, WWW, intranet. Also explains about diff. 		protocols used in Internet workings.
+
+References:	
+	Can be provided on demand.
+
+Hobbies:
+	Reading Sites of Latest technology, Surfing, Music, Singing & to 	learn new things.

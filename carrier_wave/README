@@ -1,0 +1,40 @@
+#Introduction
+
+This POC shows how we use CarrierWave for file uploads. CarrierWave uploads files at the configured folder structure. 
+
+By default it creates 'uploads' folder in 'public' folder, but here i have changed the implementation to keep the files safe from public access. In order to do that, we need to upload files at application level OR at any other desired path. We need to create a controllner action for download, so that only authorized users can access files.
+
+Please have a look at following URLs as well.
+
+http://carrierwave.rubyforge.org/rdoc/
+
+https://github.com/jnicklas/carrierwave/wiki/How-To%3A-Secure-Upload
+
+#Technical Details for this example
+
+We have one model, 'user', which allows to fill-in user details with support 'Upload resume'. 
+Users can download the resume from the user list page.
+
+Following are the steps to configure carrierwave,
+
+1. Download 'carrierwave' and 'sendfile' gems.
+2. Include both the gems in Gemfile as below,
+    gem 'carrierwave'
+    gem 'sendfile'
+3. Create model and controller as per our needs.
+4. In model class, create one column with type string. 
+    In User, we have resume:string
+5. Create new uploader using following command, it will generate new file named 'resume_uploader.rb'.
+    rails generate uploader resume
+6. In the model, map the file upload field with uploader we just created.
+    mount_uploader :resume, ResumeUploader
+7. In the new.html.erb, we need to provide file upload field for user.
+    <%= f.label :resume, 'Upload Resume' %>
+    <%= f.file_field :resume %>
+8. In the 'create' action in controller,user bang method to save the model.
+    @user.save! #to save the file, using carrierwave
+9. Now, to provide new action for download we need to map that action with unique URL path. 
+10. Create new action named 'download_resume' in the controller. In the routes.rb, add the following line. It maps the url and creates new helper variable.
+    match 'user/:id/download_user_resume' => 'user#download_resume', :as => :download_user_resume
+11. In the index.html.erb, we need to provide link to the file so user can download it. This way, it is not public url and only authorized user will be able to download it.
+    <%= link_to "Download Resume", download_user_resume_path(user)  %>

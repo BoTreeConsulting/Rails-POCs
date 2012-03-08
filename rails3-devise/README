@@ -1,0 +1,56 @@
+Introduction:
+	This is a Rails 3 application demonstrating Ruby Gem Devise for integrating authentication
+	with minimal configuration in the application.
+
+Home Page:
+    https://github.com/plataformatec/devise
+
+Wiki:
+    https://github.com/plataformatec/devise/wiki
+
+Tutorial:
+
+	The application is built by following a simple and great tutorial at http://railsapps.github.com/tutorial-rails-devise-rspec-cucumber.html
+
+Use:
+
+	To use the application follow below steps:
+
+	1) Download it under a desired directory, say RailsApps
+
+	2) Change directory to the application directory
+			$cd rails3-devise
+			
+	3) Run Database Migrations using following command
+			rails3-devise$ rake db:migrate
+			
+	   This should insert a default user named 'First User' into the default configured database, which is SQLite.
+	   
+	4) Startup the rails server
+			rails3-devise$ rails s
+
+	5) Open up a browser and hit http://localhost:3000		
+
+	6) You should now be able to see a page showing 
+
+		Login and Sign Up links along with listing the available users in the database.
+		
+	7) Clicking the user name should ask you to login to the application.This authentication is triggered by Ruby Gem Devise, if a user is 
+	   not found logged in to the application.
+	   
+	   Default user login is :
+			Email: user@example.com
+			Password: please
+		
+	8) When logged in to the application only the logged in user's profile can be edited and not other's.
+
+	Note: There is no Admin role available in the application as of now.
+   
+
+	
+	
+
+
+
+
+

@@ -1,0 +1,418 @@
+================== TUTORIAL TO BUILD A RAILS 3 APPLICATION USING RUBY GEMS DEVISE AND CANCAN.
+
+1) $ rails generate devise:install
+
+2) $ rails generate devise User
+
+3) Devise will modify the config/routes.rb file to add:
+
+        devise_for :users
+
+4) $rails generate migration AddNameToUsers name:string
+
+5) $rails generate devise:views
+
+4) Delete the default home page from your application:
+
+        $ rm public/index.html 
+
+5) $ rails generate controller home index
+
+6) Edit the file config/routes.rb and replace:
+
+        get "home/index" 
+        
+   with
+   
+		authenticated :user do
+			root :to => 'users#welcome'
+		end
+	  
+		root :to => "home#index"
+    
+7) Create following file at app/views/users
+        a) welcome.html.erb
+        b) index.html.erb
+
+8) Open app/views/users/welcome.html.erb and add following code to it:
+
+        <h3>Welcome <%= current_user.name %></h3>
+
+9) Open app/views/users/index.html.erb and add following code to it:
+
+        <% if @users.empty? %>
+           <h3>No users found</h3>
+        <% else %>
+            <h3>Listing users</h3>  
+            
+            <table>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+
+                <% @users.each do |user| %>
+                  <tr>
+                    <td><%= user.name %></td>
+                    <td><%= user.email %></td>
+                    <td>&nbsp;<%= link_to 'Show', user %>&nbsp;</td>
+                    <td>&nbsp;<%= link_to 'Edit', edit_user_path(user) %>&nbsp;</td>
+                    <td>&nbsp;<%= link_to 'Destroy', user, confirm: 'Are you sure?', method: :delete %></td>
+                  </tr>
+                <% end %>
+            </table>
+
+        <% end %>
+
+        <%= link_to 'Add User', new_user_path %>
+
+10) $rails generate model Role name:string
+
+11) $rails generate migration AddDescriptionToRoles description:string
+
+12) $rails generate migration AddRoleTypeToRoles role_type:integer 
+    
+    This field will let you check the permissions on a 
+    custom role assigned to a user.
+    
+    Say a role is created named Owner and is assigned role type
+    Administrator.Thus a user having role Owner can do any operation 
+    available for a resource.
+    
+    
+    The role types are assumed to be predefined.For e.g. 
+   
+    1 represents Administrator
+    2 represents Manager
+    3 represents User
+    These can be associated from the screen allowing to create a role.
+    
+    If no role type is found associated with a user, then a default 
+    type User(3) will be associated.
+     
+     
+
+13) $rails generate controller users show
+
+14) The file config/routes.rb has already been modified to include:
+
+        get "users/show"
+
+        Remove that and change the routes to:
+
+        root :to => "home#index"
+        
+        devise_for :users
+        resources :users, :only => :show
+
+        Important note: The devise_for :users route must be placed above resources :users, :only => :show.
+
+
+15) $rails generate scaffold_controller Role
+
+16)  Add following to  config/routes.rb   
+ 
+            resources :roles
+
+17) Edit models to relate User and Role using a many-to-many assocation with no intervening model.
+	To do this use Active Record's has_and_belongs_to_many method.
+    
+18) Update the schema to match your associations.
+
+        $rails generate migration CreateUserRoleJoinTable
+
+19) Open the migration script generated under 'db' directory in a text editor and append :id => false to 
+    create_table method.For example:
+    
+    create_table :users_roles, :id => false do |t|
+      t.integer :user_id
+      t.integer :role_id
+    end
+    
+    Note: We pass :id => false to create_table because that table does not represent a model.
+
+20) Use the :join_table option of has_and_belongs_to_many method to specify the
+    join table name explicitly, else a default name would be used which is based on
+    lexicographical order of class names.In our case we have used the table name
+    users_roles which is not in lexicographical order of class names.Thus not
+    specifying the join table would trigger ActiveRecord to use table name
+    as roles_users instead of specified users_roles name.
+    
+    Reference: http://guides.rubyonrails.org/association_basics.html#updating-the-schema
+    
+    Example: 
+        In user.rb  has_and_belongs_to_many :roles, :join_table => 'user_roles'
+        
+        
+21) Open up db/seeds.rb and add the following to it:
+
+        puts 'SETTING UP DEFAULT USER LOGIN'
+        user = User.create! :name => 'Admin User', :email => 'admin@example.com', :password => 'administrator', :password_confirmation => 'administrator'
+        puts 'New User Created: ' << user.name
+        puts 'ASSIGNING ROLE TO DEFAULT USER'
+        role = Role.create! :name => 'Administrator', :description => 'User who has control over add/edit/delete/view actions for users and roles and assigning roles to users', :role_type => 1
+        user.roles << role
+        puts "Assigned role [#{role.name}] having role type [#{role.role_type}] to default user [#{user.name}]" 
+
+    This would create default user and assign it a default role.
+
+22) $rake db:migrate
+
+23) $rake db:seed
+
+# ==============================Below step not required when using Gem CanCan
+24) Open up your app/controllers/application_controller.rb and add following code in the class to it
+
+          # Reference http://api.rubyonrails.org/classes/AbstractController/Helpers/ClassMethods.html#method-i-helper_method
+          # http://www.funonrails.com/2010/12/accessing-helper-modules-in-rails.html
+          helper_method :is_admin? # This is expose a controller method as a helper method in views
+          
+          def is_admin?
+            flag = false
+            
+            if user_signed_in?
+                current_user_roles = current_user.roles
+                flag = current_user_roles.exists?(:name => "Administrator")
+            end
+            
+            flag
+          end
+
+25) Updated your config/routes.rb to add following:
+
+    Change resources :roles 
+    To   
+       resources :roles do
+          collection do
+              get 'assign'
+          end
+       end 
+        
+    This should expose helpers like assign_roles_path which can be used in
+    views.
+    
+    Run following to check the routes available:
+        
+        $rake routes
+
+26) Open up your app/controllers/roles_controller.rb and add following methods to it:
+  
+        def assign
+            # Your code here
+        end
+        
+27) Update your application layout to show some common links like Logout, Edit account etc.
+    at the top of the page.To do this create a folder named 'shared' inside 'views'.
+    Create a file named _navigation.html.erb and add the following content to it:
+    
+    <% if user_signed_in? %>
+          <li>
+            <%= link_to 'Logout', destroy_user_session_path, :method=>'delete' %>
+          </li>
+          
+           <li>
+            <%= link_to 'Edit account', edit_user_registration_path %>
+          </li>
+          
+          <% if is_admin? %>
+            <%= link_to 'Manage Users', users_path %>
+            <%= link_to 'Manage Roles', roles_path %>
+            <%= link_to 'Assign Roles', assign_roles_path %>
+          <% end %>
+    <% end %>
+
+    Open up your views/layouts/application.html.erb and replace <%= yield %> with
+    
+    <div id="container" class="container">
+        <header>
+            <%- flash.each do |name, msg| -%>
+                <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+            <%- end -%>
+            
+            <ul class="hmenu">
+                <%= render 'shared/navigation' %>
+            </ul>
+            
+        </header>
+    
+        <div id="main" role="main">
+            <%= yield %>
+        </div>
+
+        <footer></footer>
+    </div> <!--! end of #container -->
+
+28) Rename app/assets/stylesheets/application.css to application.css.scss and add the following content to it:
+
+        header nav ul {
+          list-style: none;
+          margin: 0 0 2em;
+          padding: 0;
+        }
+
+        header nav ul li {
+          display: inline;
+        }
+
+        #flash_notice, #flash_alert {
+          padding: 5px 8px;
+          margin: 10px 0;
+        }
+
+        #flash_notice {
+          background-color: #CFC;
+          border: solid 1px #6C6;
+        }
+
+        #flash_alert {
+          background-color: #FCC;
+          border: solid 1px #C66;
+        }
+
+        ul.hmenu {
+          list-style: none; 
+          margin: 0 0 2em;
+          padding: 0;
+        }
+
+        ul.hmenu li {
+          display: inline;  
+        }
+
+29) Create following files at mentioned locations:
+        a) assign.html.erb at app/views/roles
+        
+30) Define CanCan Abilities 
+        $rails g cancan:ability
+        
+    This will generate a file named ability.rb at app/models    
+
+31) Open up your app/models/Ability.rb and add following code to initialize(user) method:
+
+    user ||= User.new # guest user (not logged in)
+    
+    # Find out max of role_type of roles assigned to a user.
+    # Reference
+    highest_role = user.roles.order("role_type DESC").first
+
+    if highest_role.nil?
+        highest_role_type = 3
+    else
+        highest_role_type = highest_role.role_type
+    end 
+    
+    case highest_role_type
+    when 1 then admin
+    when 2 then manager
+    else user
+    end
+
+    Add following methods to Ability class:
+    
+    def admin
+       # :manage represents any action and :all represents any object.
+       can :manage, :all
+    end
+      
+    def manager
+        user
+        can :update, User
+        can [:read, :assign], Role 
+    end
+      
+    def user
+        can :read, [User]
+    end
+    
+    Since users and roles are having many-to-many relation by design the permissions
+    have been segregated into different method and included based on the 
+    highest role type a user has.
+    
+    Reference: https://github.com/ryanb/cancan/wiki/Role-Based-Authorization
+
+32) Open up your app/controllers/users_controller.rb and add following methods to it:
+
+	def welcome
+		# Empty method
+	end
+	
+	# GET /users
+	def index 
+		@users = User.all
+	end
+	
+	# GET /users/new
+	def new
+		@user = User.new
+	end
+	
+	# This is to avoid routing the user to path /users (POST) created by
+	# Devise Gem.
+	# POST /users/add
+	def add
+	  @user = User.new(params[:user])
+		
+	  if @user.save
+		redirect_to @user, notice: 'User was successfully created.'
+	  else
+		render action: "new"
+	  end
+	end
+	
+	# GET /users/1/edit
+	def edit
+		@user = User.find(params[:id])
+	end
+	
+	# PUT /users/1
+	def update
+	   @user = User.find(params[:id])
+
+	   if @user.update_attributes(params[:user])
+		  redirect_to @user, notice: 'User was successfully updated.'
+	   else
+	      render action: "edit"
+	   end
+	end
+  
+    # DELETE /users/1
+    def destroy
+      @user = User.find(params[:id])
+      @user.destroy
+
+      redirect_to users_url
+    end
+
+	Above added methods are the RESTful methods and other custom methods.
+	
+	Also at the top of users_controller.rb add following code (just after code class UsersController < ApplicationController)
+	
+	  before_filter :authenticate_user!
+  
+	  # Provided by CanCan
+	  # Automatically authorize all actions in a RESTful style resource controller. 
+	  # It will use a before filter to load the resource into an instance variable 
+	  # and authorize it for every action.
+	  load_and_authorize_resource
+	  
+	  # Welcome action should not be authorized 
+	  skip_load_and_authorize_resource :only => :welcome 
+
+33) Open up app/controller/roles_controller.rb and add the following at the top just after
+	class RolesController < ApplicationController 
+	
+	  before_filter :authenticate_user!
+  
+	  # Provided by CanCan
+	  # Automatically authorize all actions in a RESTful style resource controller. 
+	  # It will use a before filter to load the resource into an instance variable 
+	  # and authorize it for every action.
+	  
+	  # Each action of role should be authorized before invocation.
+	  load_and_authorize_resource
+	
+	  
+	   

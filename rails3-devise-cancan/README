@@ -1,0 +1,80 @@
+Introduction:
+	This is a Rails 3 application demonstrating Ruby Gem Devise for integrating authentication
+	with minimal configuration in the application along with integrating Gem CanCan for authorization of
+	actions invoked by the application.
+
+Home Page:
+    Devise: https://github.com/plataformatec/devise
+    CanCan: https://github.com/ryanb/cancan
+
+Wiki:
+    Devise: https://github.com/plataformatec/devise/wiki
+    CanCan: https://github.com/ryanb/cancan/wiki
+
+Tutorial:
+
+	The application is built by following the steps mentioned in file "Devise-CanCan-Tutorial"
+	lying inside root folder of this Rails Application.
+
+Use:
+
+	To use the application follow below steps:
+
+	1) Download it under a desired directory, say RailsApps
+
+	2) Change directory to the application directory
+			$cd rails3-devise-cancan
+			
+	3) Run Database Migrations using following command
+			rails3-devise$ rake db:migrate
+			
+	   This should insert a default user named 'Admin User', having role 'Administrator' of 
+	   of role type 1 which represents an Admin type user, into the default configured database, 
+	   which is SQLite.
+	   
+	4) Startup the rails server
+			rails3-devise$ rails s
+
+	5) Open up a browser and hit http://localhost:3000		
+
+	6) You should now be able to see a welcome page prompting to Log In or Sign Up
+	   to access the application.
+
+	7) Login with default user credentials :
+		Email: admin@example.com
+		Password: administrator
+		
+		This would show up following links at the top after successful sign-in:
+		
+		    a) Logout 
+		    b) Edit account 
+		    c) Manage Users 
+		    d) Manage Roles 
+		    e) Assign Roles 
+		    
+		    The last three links are accessible only to users who have a role assigned of role type 1 (Admin).
+		
+			If any user with role type 3 (User) logs in to the application he would be able to see only following links:
+			 a) Logout 
+		     b) Edit account
+		     
+	8) Signing Up with the application will register the user in the application, sign in the user and redirect to
+	   User's Welcome Page, on successful sign up.By default a registered user will have permissions of role type
+	   3 (User).Such a user can just view User Details, nothing else.
+	   
+	   The registration, sign-in, authentication part is taken care of by Ruby Gem Devise
+	   The authorization i.e. verifying the permissions available, is taken care of by Ruby Gem CanCan.
+	   
+	   Note: The permissions are maintained in file app/models/Ability.rb
+	   
+	   
+	
+   
+
+	
+	
+
+
+
+
+

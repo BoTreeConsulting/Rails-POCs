@@ -1,0 +1,22 @@
+<% if user_signed_in? %>
+  <li>
+    <%= link_to 'Logout', destroy_user_session_path, :method=>'delete' %>
+  </li>
+  
+   <li>
+    <%= link_to 'Edit account', edit_user_registration_path %>
+  </li>
+  
+  <% if can? :manage, User %>
+    <%= link_to 'Manage Users', users_path %>
+  <% end %>
+  
+  <% if can? :manage, Role %>
+    <%= link_to 'Manage Roles', roles_path %>
+  <% end %>
+  
+  <% if can? :assign, Role %>
+    <%= link_to 'Assign Roles', assign_roles_path %>
+  <% end %>  
+  
+<% end %>

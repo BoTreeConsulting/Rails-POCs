@@ -1,0 +1,29 @@
+<% if @users.empty? %>
+   <h3>No users found</h3>
+<% else %>
+    <h3>Listing users</h3>  
+    
+    <table>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <td>&nbsp;<%= link_to 'Show', user %>&nbsp;</td>
+            <td>&nbsp;<%= link_to 'Edit', edit_user_path(user) %>&nbsp;</td>
+            <td>&nbsp;<%= link_to 'Destroy', user, confirm: 'Are you sure?', method: :delete %></td>
+          </tr>
+        <% end %>
+    </table>
+
+<% end %>
+
+<%= link_to 'Add User', new_user_path %>
+    
